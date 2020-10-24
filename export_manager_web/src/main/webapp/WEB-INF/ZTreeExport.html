@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<HTML>
+	<HEAD>
+		<TITLE> ZTREE DEMO </TITLE>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<!--此处引入的文件需与本地文件相对应-->
+		<script src="../plugins/ztree/js/jquery-1.4.4.min.js"></script>
+		<script src="../plugins/ztree/js/jquery.ztree.all-3.5.js"></script>
+		<link rel="stylesheet" href="../plugins/ztree/css/zTreeStyle/zTreeStyle.css">
+		<link rel="stylesheet" href="../plugins/ztree/css/demo.css">
+		<SCRIPT LANGUAGE="JavaScript">
+            var zTreeObj;
+            // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+            var setting = {
+                // 使用简单json必须配置此项
+                data: {
+                    simpleData: {
+                        enable: true,//true / false 分别表示 使用 / 不使用 简单数据模式
+	                    // 下面字段对应了json的字段格式,区分大小写
+                        idKey: "id",
+                        pIdKey: "pId",
+                        rootPId: 0
+                    }
+                },
+                check: {
+                    enable: true,
+                    autoCheckTrigger: true// 自动关联
+                }
+            };
+            // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+            // 简单 JSON 数据
+            var zNodes = [
+                {id:1, pId:0, name: "父节点1"},
+                {id:11, pId:1, name: "子节点1",checked:true},
+                {id:12, pId:1, name: "子节点2"}
+            ];
+            $(document).ready(function(){
+                zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+                // expandAll 展开树的所有节点
+                zTreeObj.expandAll(true);
+            });
+		</SCRIPT>
+	</HEAD>
+	<BODY>
+		<div>
+			<ul id="treeDemo" class="ztree"></ul>
+		</div>
+		<button id="btn">保存</button>
+
+		<script>
+            $("#btn").click(function () {
+                //getCheckedNodes(true)  获取所有选中的节点
+                var nodes = zTreeObj.getCheckedNodes(true);
+                alert(nodes[0].name);
+
+            })
+		</script>
+	</BODY>
+</HTML>

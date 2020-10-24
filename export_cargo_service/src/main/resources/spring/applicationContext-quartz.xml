@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+       	http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+       	http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--1.配置Job：自定义java类 -->
+    <bean id="myJob" class="com.itheima.service.cargo.job.ExportJob"/>
+
+    <!--2.配置JobDetail：执行任务来的方法-->
+    <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <!--1.确定任务类-->
+        <property name="targetObject" ref="myJob"/>
+        <!--2.确认任务的方法-->
+        <property name="targetMethod" value="updateExportResult"></property>
+    </bean>
+
+    <!--3.配置Trigger：根据时间规则，触发方法执行-->
+    <bean id="trigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <!--1.指定时间规则-->
+        <!--<property name="cronExpression" value="0 0 1,9,17 * * ? *"></property>-->
+        <property name="cronExpression" value="*/10 * * * * ? *"></property>
+        <!--2.指定JobDetail-->
+        <property name="jobDetail" ref="jobDetail"></property>
+    </bean>
+
+    <!--4.配置Scheduler：统一管理配置trigger-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <array>
+                <ref bean="trigger"></ref>
+            </array>
+        </property>
+    </bean>
+</beans>

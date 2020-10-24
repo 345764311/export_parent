@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.system.DeptDao">
+    <!--自定义结果集映射-->
+    <resultMap id="BaseResultMap" type="com.itheima.domain.system.Dept">
+        <id property="id" column="dept_id"/>
+        <result property="deptName" column="dept_name"/>
+
+        <result property="state" column="state"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <!--查询出parent结果集-->
+        <association property="parent" column="parent_id" select="findById" />
+    </resultMap>
+
+
+    <update id="update">
+        update pe_dept
+        <set>
+            <if test="deptName != null and deptName != ''">
+                dept_name=#{deptName},
+            </if>
+
+                parent_id=#{parent.id},
+
+            <if test="state != null">
+                state=#{state},
+            </if>
+            <if test="companyId != null and companyId != ''">
+                company_id=#{companyId},
+            </if>
+            <if test="companyName != null and companyName != ''">
+                company_name=#{companyName},
+            </if>
+        </set>
+        where dept_id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from  pe_dept where dept_id = #{id}
+    </delete>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from pe_dept where company_id = #{companyId}
+    </select>
+
+
+    <select id="findById" resultMap="BaseResultMap">
+        select * from pe_dept where dept_id = #{id}
+    </select>
+
+
+
+    <insert id="save">
+         insert into pe_dept (
+            dept_id,
+            dept_name,
+            parent_id,
+            state,
+            company_id,
+            company_name
+         ) values (
+            #{id},
+            #{deptName},
+            #{parent.id},
+            #{state},
+            #{companyId},
+            #{companyName}
+         );
+    </insert>
+</mapper>
